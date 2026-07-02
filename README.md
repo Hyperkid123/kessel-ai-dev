@@ -11,13 +11,13 @@ This repo contains instance-specific configuration only — the bot code lives i
 ├── deploy/
 │   └── template.yaml                 # OpenShift deploy template (bot-only)
 ├── instance/
-│   └── inventory-api/
+│   └── kessel/
 │       └── agent/
 │           ├── mcp.json              # MCP server config (Jira)
 │           ├── project-repos.json    # Repos this instance works on
 │           └── personas/
-│               └── backend/
-│                   └── prompt.md     # Backend coding guidelines
+│               ├── backend/          # Go services (inventory-api, inventory-consumer)
+│               └── tooling/          # Container/deploy repos (kessel-kafka-connect)
 └── dev-bot/                          # Submodule → platform-frontend-ai-dev
 ```
 
@@ -30,7 +30,9 @@ The bot picks up tickets that have **two kinds of labels**:
 
 | Jira primary label | Instance config | `repo:` label | Upstream repo |
 |--------------------|-----------------|---------------|---------------|
-| `hcc-ai-kessel` | `instance/inventory-api/agent/` | `repo:inventory-api` | [project-kessel/inventory-api](https://github.com/project-kessel/inventory-api) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:inventory-api` | [project-kessel/inventory-api](https://github.com/project-kessel/inventory-api) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:inventory-consumer` | [project-kessel/inventory-consumer](https://github.com/project-kessel/inventory-consumer) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-kafka-connect` | [project-kessel/kessel-kafka-connect](https://github.com/project-kessel/kessel-kafka-connect) |
 
 To add a repo:
 
@@ -75,5 +77,6 @@ Built and deployed via [Konflux](https://konflux-ci.dev/). Pipeline definitions 
 
 Deployed to the shared `platform-frontend-ai-dev` namespace via app-interface. Uses the shared proxy, memory server, and Vault secrets from the primary instance. See the deploy template for resource configuration.
 
-See [dev-bot/docs/ONBOARDING.md](dev-bot/docs/ONBOARDING.md) for full onboarding steps.
+Default `BOT_CONFIG_PATH` is `instance/kessel`. Set this in app-interface if overriding the baked-in config with a remote config repo.
 
+See [dev-bot/docs/onboarding-new-instance.md](dev-bot/docs/onboarding-new-instance.md) for full onboarding steps.

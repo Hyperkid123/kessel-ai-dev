@@ -1,9 +1,6 @@
 workflow: jira-sprint
 source: jira
 envs:
-  - node
-  - go
-  - patternfly-mcp
   - slack
   - container-scan
 claude_md:
