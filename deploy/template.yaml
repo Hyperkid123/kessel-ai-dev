@@ -46,7 +46,7 @@ objects:
 #   1. Bot Deployment (name controlled by BOT_NAME parameter)
 #      - PostgreSQL sidecar for local migration smoke tests
 #   2. NetworkPolicy (egress restricted to proxy + memory-server + DNS)
-#   3. ScaledObject (KEDA cron scaler — 24/7 weekdays, off weekends)
+#   3. ScaledObject (KEDA cron scaler — 20.5h/day active, 3.5h downtime)
 #
 # Prerequisites (deployed by platform-frontend-ai-dev):
 #   - devbot-proxy       (ports 3128, 9090, 8443, 8444, 8446)
@@ -294,7 +294,9 @@ objects:
       - port: 5353
         protocol: TCP
 
-# --- Cron Scaler: 24/7 weekdays, off on weekends ---
+# --- Cron Scaler: 20.5h active, 3.5h downtime daily ---
+# Covers distributed team hours: India (IST) 9:00 AM start through US West (PDT) 5:00 PM end.
+# Downtime window: 00:00–03:30 UTC (5:00–8:30 PM PDT / 5:30–9:00 AM IST)
 - apiVersion: keda.sh/v1alpha1
   kind: ScaledObject
   metadata:
@@ -313,6 +315,8 @@ objects:
     - type: cron
       metadata:
         timezone: "UTC"
-        start: "0 0 * * 1"
-        end: "0 0 * * 6"
+        # 03:30 UTC = 9:00 AM IST = 8:30 PM PDT (previous day) = 4:30 AM BST
+        start: "30 3 * * *"
+        # 00:00 UTC = 5:30 AM IST = 5:00 PM PDT = 1:00 AM BST (next day)
+        end: "0 0 * * *"
         desiredReplicas: "1"
