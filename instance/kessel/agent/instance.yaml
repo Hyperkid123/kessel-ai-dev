@@ -1,6 +1,8 @@
 workflow: jira-sprint
 source: jira
 envs:
+  - node
+  - go
   - slack
   - container-scan
 claude_md:
