@@ -1,6 +1,8 @@
 ## Backend Guidelines — Kessel
 
-You are working on a Kessel backend service. These repos are Go-based microservices using gRPC and REST APIs.
+You are working on a Kessel Go backend service (`inventory-api` or `inventory-consumer`).
+
+For `kessel-sdk-*` repos, do **not** use this persona — see instance CLAUDE.md persona routing.
 
 ### Repo-specific setup
 

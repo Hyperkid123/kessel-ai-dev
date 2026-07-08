@@ -1,5 +1,23 @@
 # Kessel Instance — Additional Instructions
 
+## Persona routing
+
+When loading personas (workflow step 6), use the repo key from `project-repos.json` / `repo:` label. **Repo key wins over generic tech-stack heuristics** (`go.mod` → backend, `package.json` → frontend, etc.).
+
+| Repo key | Persona | Do NOT load |
+|----------|---------|-------------|
+| `inventory-api` | `backend` | — |
+| `inventory-consumer` | `backend` | — |
+| `kessel-kafka-connect` | `tooling` | `backend` |
+| `kessel-sdk-go` | `sdk-go` | `backend` |
+| `kessel-sdk-py` | `sdk-py` | `backend` |
+| `kessel-sdk-java` | `sdk-java` | `backend` |
+| `kessel-sdk-ruby` | `sdk-ruby` | `backend` |
+| `kessel-sdk-node` | `sdk-node` | `frontend` |
+| `kessel-sdk-browser` | `sdk-browser` | `frontend` |
+
+For `kessel-sdk-*` repos, load **only** the mapped persona. Do not load `backend`, `frontend`, or other SDK language personas.
+
 ## Version Management
 
 This instance has **nvm** (Node) and **goenv** (Go) version managers installed. Use them to match the version required by each repo.
@@ -34,3 +52,11 @@ Pre-installed: Go 1.24.2 (default), 1.25.7. Available globally via `/usr/local/b
 - `go.mod` says `go 1.23` → `goenv install 1.23.x && goenv local 1.23.x`
 - `.nvmrc` says `20` → `nvm use 20` (installs automatically if missing)
 - No version file → use the defaults
+
+### Python
+
+Python 3.12 is the default (`python3`). SDK repos may require 3.11+ per `pyproject.toml`.
+
+### Java / Ruby
+
+Java (Maven) and Ruby (Bundler) are not pre-installed in this image. For `kessel-sdk-java` and `kessel-sdk-ruby`, run validation in CI if local tooling is unavailable. Do not block on missing local JDK/Ruby unless setup has been added to `setup.sh`.
