@@ -16,10 +16,14 @@ This repo contains instance-specific configuration only — the bot code lives i
 │           ├── mcp.json              # MCP server config (Jira)
 │           ├── project-repos.json    # Repos this instance works on
 │           └── personas/
-│               ├── backend/          # Go services + compiled SDK languages
-│               ├── frontend/         # Node and Browser SDKs
-│               ├── sdk/              # Cross-language SDK guidelines
-│               └── tooling/          # Container/deploy repos (kessel-kafka-connect)
+│               ├── backend/          # inventory-api, inventory-consumer
+│               ├── sdk-go/           # kessel-sdk-go
+│               ├── sdk-py/           # kessel-sdk-py
+│               ├── sdk-java/         # kessel-sdk-java
+│               ├── sdk-ruby/         # kessel-sdk-ruby
+│               ├── sdk-node/         # kessel-sdk-node
+│               ├── sdk-browser/      # kessel-sdk-browser
+│               └── tooling/          # kessel-kafka-connect
 └── dev-bot/                          # Submodule → platform-frontend-ai-dev
 ```
 

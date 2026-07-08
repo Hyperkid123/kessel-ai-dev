@@ -1,5 +1,23 @@
 # Kessel Instance — Additional Instructions
 
+## Persona routing
+
+When loading personas (workflow step 6), use the repo key from `project-repos.json` / `repo:` label. **Repo key wins over generic tech-stack heuristics** (`go.mod` → backend, `package.json` → frontend, etc.).
+
+| Repo key | Persona | Do NOT load |
+|----------|---------|-------------|
+| `inventory-api` | `backend` | — |
+| `inventory-consumer` | `backend` | — |
+| `kessel-kafka-connect` | `tooling` | `backend` |
+| `kessel-sdk-go` | `sdk-go` | `backend` |
+| `kessel-sdk-py` | `sdk-py` | `backend` |
+| `kessel-sdk-java` | `sdk-java` | `backend` |
+| `kessel-sdk-ruby` | `sdk-ruby` | `backend` |
+| `kessel-sdk-node` | `sdk-node` | `frontend` |
+| `kessel-sdk-browser` | `sdk-browser` | `frontend` |
+
+For `kessel-sdk-*` repos, load **only** the mapped persona. Do not load `backend`, `frontend`, or other SDK language personas.
+
 ## Version Management
 
 This instance has **nvm** (Node) and **goenv** (Go) version managers installed. Use them to match the version required by each repo.
