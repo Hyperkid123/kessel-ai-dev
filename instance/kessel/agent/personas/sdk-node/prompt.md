@@ -18,7 +18,7 @@ TypeScript client library for the Kessel Inventory and RBAC APIs. Published as `
 Do not edit: generated `.ts` stubs under `src/kessel/inventory/v*/` (except hand-written `index.ts`).
 
 **Hand-written code**:
-- `src/kessel/auth/`, `src/kessel/grpc/`, `src/kessel/inventory/index.ts`, `src/kessel/rbac/`, `src/promisify.ts`
+- `src/kessel/auth/`, `src/kessel/console`, `src/kessel/grpc/`, `src/kessel/inventory/index.ts`, `src/kessel/rbac/`, `src/promisify.ts`
 
 API changes belong in the upstream inventory-api proto repo — not in generated stubs.
 
