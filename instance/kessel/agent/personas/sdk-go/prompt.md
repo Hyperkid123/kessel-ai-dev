@@ -18,7 +18,7 @@ Client library for the Kessel Inventory and RBAC APIs.
 Do not edit: `*.pb.go`, `*_grpc.pb.go`
 
 **Hand-written code** — auth, gRPC credentials, `ClientBuilder`, RBAC helpers, examples, tests:
-- `kessel/auth/`, `kessel/grpc/`, `kessel/inventory/internal/builder/`, `kessel/rbac/`
+- `kessel/auth/`, `kessel/config/`, `kessel/console/, `kessel/grpc/`, `kessel/inventory/internal/builder/`, `kessel/rbac/`
 
 API changes belong in the upstream inventory-api proto repo — not in generated stubs.
 
