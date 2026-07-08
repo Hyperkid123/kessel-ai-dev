@@ -1,0 +1,14 @@
+{
+  "inventory-api": {
+    "url": "https://github.com/platex-rehor-bot/inventory-api",
+    "upstream": "https://github.com/project-kessel/inventory-api.git"
+  },
+  "inventory-consumer": {
+    "url": "https://github.com/platex-rehor-bot/inventory-consumer",
+    "upstream": "https://github.com/project-kessel/inventory-consumer.git"
+  },
+  "kessel-kafka-connect": {
+    "url": "https://github.com/platex-rehor-bot/kessel-kafka-connect",
+    "upstream": "https://github.com/project-kessel/kessel-kafka-connect.git"
+  }
+}

@@ -26,7 +26,7 @@ parameters:
 - name: BOT_NAME
   value: devbot-kessel
 - name: BOT_CONFIG_PATH
-  value: ""
+  value: instance/kessel
 - name: GCP_PROJECT_ID
   required: true
 - name: GCP_REGION
