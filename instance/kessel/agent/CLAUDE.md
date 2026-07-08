@@ -34,3 +34,11 @@ Pre-installed: Go 1.24.2 (default), 1.25.7. Available globally via `/usr/local/b
 - `go.mod` says `go 1.23` → `goenv install 1.23.x && goenv local 1.23.x`
 - `.nvmrc` says `20` → `nvm use 20` (installs automatically if missing)
 - No version file → use the defaults
+
+### Python
+
+Python 3.12 is the default (`python3`). SDK repos may require 3.11+ per `pyproject.toml`.
+
+### Java / Ruby
+
+Java (Maven) and Ruby (Bundler) are not pre-installed in this image. For `kessel-sdk-java` and `kessel-sdk-ruby`, run validation in CI if local tooling is unavailable. Do not block on missing local JDK/Ruby unless setup has been added to `setup.sh`.

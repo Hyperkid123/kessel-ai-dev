@@ -16,7 +16,9 @@ This repo contains instance-specific configuration only — the bot code lives i
 │           ├── mcp.json              # MCP server config (Jira)
 │           ├── project-repos.json    # Repos this instance works on
 │           └── personas/
-│               ├── backend/          # Go services (inventory-api, inventory-consumer)
+│               ├── backend/          # Go services + compiled SDK languages
+│               ├── frontend/         # Node and Browser SDKs
+│               ├── sdk/              # Cross-language SDK guidelines
 │               └── tooling/          # Container/deploy repos (kessel-kafka-connect)
 └── dev-bot/                          # Submodule → platform-frontend-ai-dev
 ```
@@ -33,6 +35,12 @@ The bot picks up tickets that have **two kinds of labels**:
 | `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:inventory-api` | [project-kessel/inventory-api](https://github.com/project-kessel/inventory-api) |
 | `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:inventory-consumer` | [project-kessel/inventory-consumer](https://github.com/project-kessel/inventory-consumer) |
 | `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-kafka-connect` | [project-kessel/kessel-kafka-connect](https://github.com/project-kessel/kessel-kafka-connect) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-sdk-go` | [project-kessel/kessel-sdk-go](https://github.com/project-kessel/kessel-sdk-go) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-sdk-py` | [project-kessel/kessel-sdk-py](https://github.com/project-kessel/kessel-sdk-py) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-sdk-java` | [project-kessel/kessel-sdk-java](https://github.com/project-kessel/kessel-sdk-java) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-sdk-ruby` | [project-kessel/kessel-sdk-ruby](https://github.com/project-kessel/kessel-sdk-ruby) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-sdk-node` | [project-kessel/kessel-sdk-node](https://github.com/project-kessel/kessel-sdk-node) |
+| `hcc-ai-kessel` | `instance/kessel/agent/` | `repo:kessel-sdk-browser` | [project-kessel/kessel-sdk-browser](https://github.com/project-kessel/kessel-sdk-browser) |
 
 To add a repo:
 
