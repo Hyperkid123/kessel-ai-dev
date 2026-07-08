@@ -17,7 +17,7 @@ Client library for the Kessel Inventory and RBAC APIs.
 Do not edit: files with `@Generated` / `@GrpcGenerated` annotations under `src/main/java` from buf.
 
 **Hand-written code** — auth, gRPC credentials, `ClientBuilder`, RBAC helpers, examples, tests:
-- `org.project_kessel.api.auth`, `grpc`, `inventory`, `rbac`
+- `org.project_kessel.api.auth`, `common`, `console`, `grpc`, `inventory`, `rbac`
 
 API changes belong in the upstream inventory-api proto repo — not in generated stubs.
 
