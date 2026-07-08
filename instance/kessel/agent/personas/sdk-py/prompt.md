@@ -17,7 +17,7 @@ Client library for the Kessel Inventory and RBAC APIs.
 Do not edit: `*_pb2.py`, `*_pb2_grpc.py`
 
 **Hand-written code** — auth, gRPC credentials, `ClientBuilder`, RBAC helpers, examples, tests:
-- `src/kessel/auth/`, `src/kessel/grpc/`, `src/kessel/inventory/`, `src/kessel/rbac/`
+- `src/kessel/auth/`, `src/kessel/console/`, `src/kessel/grpc/`, `src/kessel/inventory/`, `src/kessel/rbac/`
 
 API changes belong in the upstream inventory-api proto repo — not in generated stubs.
 
