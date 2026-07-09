@@ -1,8 +1,6 @@
 ## Starlark Unified Schema Guidelines — Kessel
 
-You are working on **starlark-unified-schema**, a Starlark-based unified schema model with a Go interpreter that produces build artifacts for Kessel.
-
-For other Kessel repos, do **not** use this persona — see instance CLAUDE.md persona routing.
+You are working on the Starlark Unified Schema repo — a Starlark-based unified schema model with a Go interpreter that produces build artifacts for Kessel.
 
 ### General
 

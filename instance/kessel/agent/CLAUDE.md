@@ -15,10 +15,10 @@ When loading personas (workflow step 6), use the repo key from `project-repos.js
 | `kessel-sdk-ruby` | `sdk-ruby` | `backend` |
 | `kessel-sdk-node` | `sdk-node` | `frontend` |
 | `kessel-sdk-browser` | `sdk-browser` | `frontend` |
-| `starlark-unified-schema` | `starlark` | `backend`, `tooling` |
+| `starlark-unified-schema` | `starlark` | `backend` |
 
 For `kessel-sdk-*` repos, load **only** the mapped persona. Do not load `backend`, `frontend`, or other SDK language personas.
-For `starlark-unified-schema`, load **only** the `starlark` persona. Do not load `backend` or `tooling`.
+For `starlark-unified-schema`, load **only** the `starlark` persona. Do not load `backend`.
 
 ## Version Management
 
