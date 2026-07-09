@@ -34,5 +34,9 @@
   "kessel-sdk-browser": {
     "url": "https://github.com/platex-rehor-bot/kessel-sdk-browser",
     "upstream": "https://github.com/project-kessel/kessel-sdk-browser.git"
+  },
+  "starlark-unified-schema": {
+    "url": "https://github.com/platex-rehor-bot/starlark-unified-schema",
+    "upstream": "https://github.com/project-kessel/starlark-unified-schema.git"
   }
 }
