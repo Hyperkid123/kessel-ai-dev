@@ -36,11 +36,11 @@ parameters:
 - name: SLACK_WEBHOOK_URL
   value: ""
 - name: KEDA_TIMEZONE
-  value: "Europe/Bratislava"
+  value: "UTC"
 - name: KEDA_CRON_START
-  value: "0 8 * * 1-5"
+  value: "0 7 * * 1-5"
 - name: KEDA_CRON_END
-  value: "0 16 * * 1-5"
+  value: "0 0 * * 1-5"
 objects:
 
 # ============================================================================
@@ -249,7 +249,7 @@ objects:
         protocol: TCP
 
 # --- KEDA Cron Scaler ---
-# Defaults: Mon-Fri 08:00-16:00 Bratislava time.
+# Mon-Fri 07:00-00:00 UTC = CZ 9AM CEST through US Pacific 5PM PDT.
 # Override KEDA_TIMEZONE, KEDA_CRON_START, KEDA_CRON_END per deployment
 # target in the app-interface SaaS file.
 - apiVersion: keda.sh/v1alpha1
