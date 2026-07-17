@@ -18,7 +18,7 @@ Claim ticket = OK. But validate info BEFORE opening MR.
 
 Merged MR ≠ done. Done = reporter confirms working OR Jira moved to Closed.
 
-On merge → move Jira to Release Pending. Do NOT close. Wait for confirmation.
+On merge → move Jira to Release Pending + comment tagging reporter: "@reporter MR merged. Please confirm the route works as expected so I can close this." Do NOT close. Wait for confirmation.
 
 ## Knowledge order
 
