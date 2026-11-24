@@ -50,7 +50,7 @@ The upstream `jira-sprint` default set is `gh-pr-status` and `gl-mr-status`. Bot
 
 **Open parity gaps:**
 
-- The deployed Python runner receives `BOT_JIRA_EMAIL` from a Vault-backed secret key, and its sprint/backlog scan uses it for the bot-assigned candidate pass. `jira-sprint` exposes an optional literal `with.email`, but copying the deployment identity into `instance.yaml` would duplicate a deployment-owned value and drift on rotation. Rehor #678 / REHOR-278 wires the deployment identity into the preflight context; it is not merged at `a113ed3`. Until then the dispatcher scans unassigned candidates only and can miss bot-assigned tickets.
+- The deployed Python runner receives `BOT_JIRA_EMAIL` from a Vault-backed secret key, and its sprint/backlog scan uses it for the bot-assigned candidate pass. `jira-sprint` exposes an optional literal `with.email`, but copying the deployment identity into `instance.yaml` would duplicate a deployment-owned value and drift on rotation. Rehor #678 / REHOR-278 supplies that deployment identity to the dispatcher's preflight context instead (merged `394edfd`, on upstream `master`, not in the pinned `a113ed3`). The fallback is dispatcher-side: it is active only once a compatible dispatcher is deployed and a representative live cycle shows bot-assigned tickets are found. Until then the dispatcher scans unassigned candidates only and can miss bot-assigned tickets. No literal `with.email` is needed.
 - `gl-mr-status` reaches GitLab through the services-gateway `/gitlab` API route. Gateway's existing GitLab clone credentials do not prove that API routing, so it remains a cutover gate.
 
 ## OpenCode guidance and native agents
@@ -74,7 +74,7 @@ The dispatcher gates new sessions only; in-flight sessions drain after a window 
 `dev-bot` moves from `150a350` to `a113ed3e55322c77b24fe4408c7a8fb499407074`.
 
 - `a113ed3` contains top-level profile `env` support (#668), registered TypeScript preflights, profile discovery with required `image`, and KEDA-style schedule evaluation (#674).
-- Current upstream `master` is `b5d2e8d`. A tree diff from `a113ed3` to `b5d2e8d` changes only CI workflows, Dockerfile/Containerfile image references, and `renovate.jsonc`; no dispatcher or preflight source changes.
+- Current upstream `master` is `394edfd`. A tree diff from `a113ed3` to `b5d2e8d` changes only CI workflows, Dockerfile/Containerfile image references, and `renovate.jsonc`; no dispatcher or preflight source changes. `394edfd` after that is the merged Rehor #678 dispatcher-side bot-identity and screenshot-upload work. The pin stays `a113ed3`; a dispatcher containing the later merge is required for the bot-identity fallback described above.
 - Moving the gitlink alone does not change the running image. The Kessel runner image must be rebuilt and published with this revision and the OpenCode V2 closure before dispatcher use.
 
 ## Validation performed
@@ -93,7 +93,7 @@ The app-interface audit was read-only: YAML parse and `git diff --check` on the 
 ## Gates before cutover
 
 1. **Dispatcher and image compatibility:** deploy a dispatcher image containing `a113ed3` (or current `master`) and build/publish a Kessel runner image from the same revision with the OpenCode V2 closure. Confirm the configured `latest` tag resolves to that image, then pin the digest/tag. Do not infer compatibility from a floating tag.
-2. **Bot-assigned candidate identity:** land and validate Rehor #678 / REHOR-278, or obtain an explicit owner decision that unassigned-only intake is acceptable.
+2. **Bot-assigned candidate identity:** deploy a dispatcher containing Rehor #678 / REHOR-278 (`394edfd`, merged) and run representative live checks that bot-assigned sprint/backlog candidates are found, or obtain an explicit owner decision that unassigned-only intake is acceptable. The fallback is dispatcher-side, and the `a113ed3` pin predates it.
 3. **Services gateway and credentials:** configure the authenticated services gateway for Jira, GitHub, and GitLab API routes, complete the applicable security review (including REHOR-254), and verify `gl-mr-status` works for Gateway. Keep Slack delivery fail-closed until its deployment-owned webhook is verified; never expose or rename secret values.
 4. **Native model routing:** only if the Sol/Terra/Luna split is adopted, declare Sol in an instance deployment config, confirm the shared allowlist/gateway for this image, add native agents only for real roles, and validate before changing `provider`/`model`.
 5. **Schedule and isolation:** verify both profiles report off-schedule outside their windows, dispatch inside them, and never share instance IDs, labels, boards, sessions, or checkouts. Stop the legacy deployment for an instance before the dispatcher handles it.
@@ -113,5 +113,5 @@ The legacy deploy templates are untouched, so no template rollback is required.
 ## Draft limitations
 
 - No dispatcher enrollment, image publication/promotion, app-interface/GitOps change, deployment, Jira write, or live cycle.
-- `jira-sprint` bot-assigned parity is blocked on Rehor #678; native skills/commands, sandbox MCP, GitLab API routing, and Slack delivery are unproven; `latest` is a gate, not a verified artifact.
+- `jira-sprint` bot-assigned parity requires a deployed dispatcher containing merged Rehor #678 (`394edfd`) plus representative live checks; native skills/commands, sandbox MCP, GitLab API routing, and Slack delivery are unproven; `latest` is a gate, not a verified artifact.
 - Console Next PR #68 and HCC PR #121 are format/scope references only; this draft does not depend on their merge.
