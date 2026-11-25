@@ -50,7 +50,7 @@ The upstream `jira-sprint` default set is `gh-pr-status` and `gl-mr-status`. Bot
 
 **Open parity gaps:**
 
-- The deployed Python runner receives `BOT_JIRA_EMAIL` from a Vault-backed secret key, and its sprint/backlog scan uses it for the bot-assigned candidate pass. `jira-sprint` exposes an optional literal `with.email`, but copying the deployment identity into `instance.yaml` would duplicate a deployment-owned value and drift on rotation. Rehor #678 / REHOR-278 supplies that deployment identity to the dispatcher's preflight context instead (merged `394edfd`, contained in the `6b4f296` pin). The fallback is still dispatcher-side: it is active only once a dispatcher image containing that merge is deployed and a representative live cycle shows bot-assigned tickets are found. Until then the dispatcher scans unassigned candidates only and can miss bot-assigned tickets. No literal `with.email` is needed.
+- The deployed Python runner receives `BOT_JIRA_EMAIL` from a Vault-backed secret key, and its sprint/backlog scan uses it for the bot-assigned candidate pass. `jira-sprint` exposes an optional literal `with.email`, but copying the deployment identity into `instance.yaml` would duplicate a deployment-owned value and drift on rotation. Rehor #678 / REHOR-278 supplies that deployment identity to the dispatcher's preflight context instead (merged `394edfd`, contained in the `f23332e` pin). The fallback is still dispatcher-side: it is active only once a dispatcher image containing that merge is deployed and a representative live cycle shows bot-assigned tickets are found. Until then the dispatcher scans unassigned candidates only and can miss bot-assigned tickets. No literal `with.email` is needed.
 - `gl-mr-status` reaches GitLab through the services-gateway `/gitlab` API route. Gateway's existing GitLab clone credentials do not prove that API routing, so it remains a cutover gate.
 
 ## OpenCode guidance and native agents
@@ -71,20 +71,21 @@ The dispatcher gates new sessions only; in-flight sessions drain after a window 
 
 ## dev-bot pin
 
-`dev-bot` moves from `150a350` to `6b4f296072f48acc5bd89f8a900ee821f3a1894e`.
+`dev-bot` moves from `150a350` to `f23332ec8e0030c5a2d1222b3f3f45e46b8a0b51`.
 
-- `6b4f296` is current upstream `master` (`feat(preflights): pass instance env to preflights as one unit (REHOR-279)`, #679). It contains everything the earlier draft pin `a113ed3` provided: top-level profile `env` support (#668), registered TypeScript preflights, profile discovery with required `image`, and KEDA-style schedule evaluation (#674).
-- Between `a113ed3` and `6b4f296` only two revisions affect this draft: `394edfd` (merged Rehor #678 / REHOR-278 dispatcher-side bot Jira identity and screenshot-upload helper) and `6b4f296` (REHOR-279 delivers the profile's approved top-level `env` to the registered TypeScript preflights as one read-only `instanceEnv` unit, never merged with the process environment, `sandbox.env`, or secret references). The revisions in between are CI workflow, image-reference, and `renovate.jsonc` chores; no other dispatcher or preflight source changes.
+- `f23332e` is current upstream `master` (`fix(deps): update Grype to patch embedded Brotli`, #683). It contains everything the earlier draft pins provided: top-level profile `env` support (#668), registered TypeScript preflights, profile discovery with required `image`, KEDA-style schedule evaluation (#674), dispatcher-side bot Jira identity (#678), and one-unit `instanceEnv` delivery to preflights (#679).
+- Between `6b4f296` and `f23332e` only these revisions affect the dispatcher or runner: `7df34e1` (Rehor #680 ports the Fabric Access workflow preflights and adds two optional `gh-pr-status` inputs), `b7da850` (Rehor #272/274 parses an optional `sandbox.env` category and renders tier-2 secret references at dispatch time), `bcb2c34` (Rehor #688 delivers rendered `sandbox.env` through the native sandbox environment), and `4cff10c` (Rehor #682 percent-encodes the bot instance identity header in the runner entrypoint). `f23332e` is a Grype dependency bump. None of them changes the declared `gh-pr-status`/`gl-mr-status`/`jira-sprint` parameters or the profile shape used here; both profiles declare no `sandbox.env`, so the secret-delivery path stays unused.
+- Between `a113ed3` and `6b4f296` only two revisions affected this draft: `394edfd` (merged Rehor #678 / REHOR-278 dispatcher-side bot Jira identity and screenshot-upload helper) and `6b4f296` (REHOR-279 delivers the profile's approved top-level `env` to the registered TypeScript preflights as one read-only `instanceEnv` unit, never merged with the process environment, `sandbox.env`, or secret references). The revisions in between were CI workflow, image-reference, and `renovate.jsonc` chores; no other dispatcher or preflight source changes.
 - These profiles keep their settings in the explicit `jira-sprint` `with:` parameters and in `env`. The new `instanceEnv` unit is an available delivery path, not a replacement, and none of the declared preflights consumes it yet, so no profile field changes with this pin.
 - Moving the gitlink alone does not change the running image. The Kessel runner image must be rebuilt and published with this revision and the OpenCode V2 closure before dispatcher use.
 
 ## Validation performed
 
-The validation harness ran against this checkout with the pinned Rehor revision `6b4f296` built from source in a separate worktree, and completed without error. The harness called the real `discoverAgentProfiles`, `validateConfig` against `createPopulatedRegistry`, and `isScheduleActive` implementations. Results:
+The validation harness ran against this checkout with the pinned Rehor revision `f23332e` built from source in a separate worktree, and completed without error. The harness called the real `discoverAgentProfiles`, `validateConfig` against `createPopulatedRegistry`, and `isScheduleActive` implementations. Results:
 
 - exactly two profiles were discovered: `gateway` and `kessel`, with the intended identities, labels, config paths, image, env, and schedules;
-- each profile's `env` was read as the preflight settings unit (instance ID, label, board, backlog, config path, engine) and passed the dispatcher's non-secret name eligibility rules, unchanged by the new `instanceEnv` delivery;
-- `gh-pr-status`, `gl-mr-status`, and `jira-sprint` resolved with their effective parameters;
+- each profile's `env` was read as the preflight settings unit (instance ID, label, board, backlog, config path, engine) and passed the dispatcher's non-secret name eligibility rules, unchanged by the `instanceEnv` delivery;
+- `gh-pr-status`, `gl-mr-status`, and `jira-sprint` resolved with their effective parameters and the same defaults as the previous pin; the registry gained the four Fabric Access preflights from Rehor #680, which these profiles do not declare;
 - Kessel boundaries passed before/at `03:30`, before/at `00:00`, and on Sunday;
 - Gateway boundaries passed before/at Monday `07:00`, Tuesday `00:00`, Friday `23:59`, Saturday/Sunday inside the Friday-opened window, and Monday `00:00`;
 - the Python instance loader read `runtime: opencode`, `provider: vertex`, the env presets, and resolved `model=claude-opus-4-6` for both profiles;
@@ -94,7 +95,7 @@ The app-interface audit was read-only: YAML parse and `git diff --check` on the 
 
 ## Gates before cutover
 
-1. **Dispatcher and image compatibility:** deploy a dispatcher image containing `6b4f296` (current `master`) and build/publish a Kessel runner image from the same revision with the OpenCode V2 closure. Confirm the configured `latest` tag resolves to that image, then pin the digest/tag. Do not infer compatibility from a floating tag.
+1. **Dispatcher and image compatibility:** deploy a dispatcher image containing `f23332e` (current `master`) and build/publish a Kessel runner image from the same revision with the OpenCode V2 closure. Confirm the configured `latest` tag resolves to that image, then pin the digest/tag. Do not infer compatibility from a floating tag.
 2. **Bot-assigned candidate identity:** deploy a dispatcher containing Rehor #678 / REHOR-278 (`394edfd`, contained in the pin but not yet in any verified deployed image) and run representative live checks that bot-assigned sprint/backlog candidates are found, or obtain an explicit owner decision that unassigned-only intake is acceptable. The fallback is dispatcher-side.
 3. **Services gateway and credentials:** configure the authenticated services gateway for Jira, GitHub, and GitLab API routes, complete the applicable security review (including REHOR-254), and verify `gl-mr-status` works for Gateway. Keep Slack delivery fail-closed until its deployment-owned webhook is verified; never expose or rename secret values.
 4. **Native model routing:** only if the Sol/Terra/Luna split is adopted, declare Sol in an instance deployment config, confirm the shared allowlist/gateway for this image, add native agents only for real roles, and validate before changing `provider`/`model`.
